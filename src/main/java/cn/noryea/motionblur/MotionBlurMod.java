@@ -26,6 +26,7 @@ public class MotionBlurMod implements ClientModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register((callback, a) -> callback.register(
                 ClientCommandManager.literal("motionblur")
+                        .executes(context -> toggle(context.getSource()))
                         .then(ClientCommandManager.argument("percent", IntegerArgumentType.integer(0, 100))
                                 .executes(context -> changeAmount(context.getSource(), IntegerArgumentType.getInteger(context, "percent"))))
         ));
@@ -45,8 +46,15 @@ public class MotionBlurMod implements ClientModInitializer {
         });
     }
 
+    private static int toggle(FabricClientCommandSource src) {
+        MotionBlurConfig.setMotionBlurEnabled(!MotionBlurConfig.ENABLED);
+        src.sendFeedback(Text.of("Motion Blur: " + (MotionBlurConfig.ENABLED ? "Enabled" : "Disabled")));
+        return MotionBlurConfig.ENABLED ? 1 : 0;
+    }
+
     private static int changeAmount(FabricClientCommandSource src, int amount) {
         MotionBlurConfig.setMotionBlurAmount(amount);
+        MotionBlurConfig.setMotionBlurEnabled(amount > 0);
 
         src.sendFeedback(Text.of("Motion Blur: " + amount + "%"));
         return amount;

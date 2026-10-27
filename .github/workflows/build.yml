@@ -43,7 +43,7 @@ jobs:
     # - name: Build with Gradle 8.5
     #   run: gradle build
     - name: Upload built files
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: motionblur-jar
         path: build/libs

@@ -33,5 +33,4 @@ public class MotionBlurConfig {
         CONFIG.set("motionblur.enabled", value);
         syncConfigs();
     }
-
 }

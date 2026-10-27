@@ -17,14 +17,16 @@ public class MotionBlurMod implements ClientModInitializer {
     public static String ID = "motionblur";
     private float currentBlur;
 
-    private final ManagedShaderEffect motionblur = ShaderEffectManager.getInstance().manage(Identifier.of(ID, "shaders/post/motion_blur.json"),
-            shader -> shader.setUniformValue("BlendFactor", getBlur()));
+    private final ManagedShaderEffect motionblur = ShaderEffectManager.getInstance().manage(
+            Identifier.of(ID, "shaders/post/motion_blur.json"),
+            shader -> shader.setUniformValue("BlendFactor", getBlur())
+    );
 
     @Override
     public void onInitializeClient() {
         MotionBlurConfig.registerConfigs(50);
 
-        ClientCommandRegistrationCallback.EVENT.register((callback, a) -> callback.register(
+        ClientCommandRegistrationCallback.EVENT.register((callback, registryAccess) -> callback.register(
                 ClientCommandManager.literal("motionblur")
                         .executes(context -> toggle(context.getSource()))
                         .then(ClientCommandManager.argument("percent", IntegerArgumentType.integer(0, 100))
@@ -63,5 +65,4 @@ public class MotionBlurMod implements ClientModInitializer {
     public float getBlur() {
         return MotionBlurConfig.ENABLED ? Math.min(MotionBlurConfig.MOTIONBLUR_AMOUNT, 99) / 100F : 0F;
     }
-
 }

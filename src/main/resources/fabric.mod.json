@@ -17,13 +17,19 @@
   "entrypoints": {
     "client": [
       "cn.noryea.motionblur.MotionBlurMod"
+    ],
+    "modmenu": [
+      "cn.noryea.motionblur.modmenu.MotionBlurModMenu"
     ]
   },
   "mixins": [],
   "depends": {
     "minecraft": "1.21.x",
-    "fabricloader": ">=0.11.3",
+    "fabricloader": ">=0.15.11",
     "fabric-command-api-v2": "*",
     "satin": "*"
+  },
+  "recommends": {
+    "modmenu": "*"
   }
 }

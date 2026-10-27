@@ -31,10 +31,14 @@ public class MotionBlurMod implements ClientModInitializer {
         ));
 
         ShaderEffectRenderCallback.EVENT.register((deltaTick) -> {
+            if (!MotionBlurConfig.ENABLED) {
+                return;
+            }
+
             if (getBlur() != 0) {
-                if(currentBlur!=getBlur()){
+                if (currentBlur != getBlur()) {
                     motionblur.setUniformValue("BlendFactor", getBlur());
-                    currentBlur=getBlur();
+                    currentBlur = getBlur();
                 }
                 motionblur.render(deltaTick);
             }
@@ -49,7 +53,7 @@ public class MotionBlurMod implements ClientModInitializer {
     }
 
     public float getBlur() {
-        return Math.min(MotionBlurConfig.MOTIONBLUR_AMOUNT, 99)/100F;
+        return MotionBlurConfig.ENABLED ? Math.min(MotionBlurConfig.MOTIONBLUR_AMOUNT, 99) / 100F : 0F;
     }
 
 }

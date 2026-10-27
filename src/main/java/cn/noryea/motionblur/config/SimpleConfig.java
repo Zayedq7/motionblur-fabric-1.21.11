@@ -32,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -180,24 +179,41 @@ public class SimpleConfig {
         boolean success = false;
         MotionBlurConfigProvider configProvider = new MotionBlurConfigProvider();
 
-        //traverse all configurations
-        for (Map.Entry<String, String> entry : config.entrySet()){
+        for (Map.Entry<String, String> entry : config.entrySet()) {
             if (!entry.getKey().equals(key)) {
                 configProvider.addKeyValuePair(new Pair<>(entry.getKey(), entry.getValue()));
                 continue;
             }
 
-            config.put(key, "" + value);    //put new value to Hash Table
+            config.put(key, "" + value);
             configProvider.addKeyValuePair(new Pair<>(key, value));
             success = true;
         }
 
-        //update config file
         if (success) {
             updateWithProvider(configProvider);
         }
     }
 
+    public void set(@NotNull String key, boolean value) {
+        boolean success = false;
+        MotionBlurConfigProvider configProvider = new MotionBlurConfigProvider();
+
+        for (Map.Entry<String, String> entry : config.entrySet()) {
+            if (!entry.getKey().equals(key)) {
+                configProvider.addKeyValuePair(new Pair<>(entry.getKey(), entry.getValue()));
+                continue;
+            }
+
+            config.put(key, String.valueOf(value));
+            configProvider.addKeyValuePair(new Pair<>(key, value));
+            success = true;
+        }
+
+        if (success) {
+            updateWithProvider(configProvider);
+        }
+    }
 
     /**
      * Queries a value from config, returns `null` if the
@@ -230,6 +246,19 @@ public class SimpleConfig {
     public int getOrDefault(String key, int def) {
         try {
             return Integer.parseInt(get(key));
+        } catch (Exception e) {
+            return def;
+        }
+    }
+
+    public boolean getOrDefault(String key, boolean def) {
+        String val = get(key);
+        if (val == null) {
+            return def;
+        }
+
+        try {
+            return Boolean.parseBoolean(val);
         } catch (Exception e) {
             return def;
         }

@@ -1,6 +1,6 @@
 plugins {
-	id 'fabric-loom' version '1.7.2'
-	id 'io.github.juuxel.loom-quiltflower' version '1.7.2'
+    id 'fabric-loom' version '1.8.12'
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_21
@@ -11,92 +11,72 @@ version = getVersion()
 group = project.maven_group
 
 configurations {
-	includeClasspath
+    includeClasspath
 
-	modIncludeImplementation
-	include.extendsFrom modIncludeImplementation
-	modImplementation.extendsFrom modIncludeImplementation
+    modIncludeImplementation
+    include.extendsFrom modIncludeImplementation
+    modImplementation.extendsFrom modIncludeImplementation
 }
 
 repositories {
-	maven {
-		name = 'Ladysnake Mods'
-		url = 'https://maven.ladysnake.org/releases'
-		content {
-			includeGroup 'io.github.ladysnake'
-			includeGroup 'org.ladysnake'
-			includeGroupByRegex 'dev\\.onyxstudios.*'
-		}
-	}
-	maven {
-		url = 'https://maven.terraformersmc.com/releases'
-		content {
-			includeGroup 'com.terraformersmc'
-		}
-	}
-	maven { url = "https://api.modrinth.com/maven" }
-	maven { url 'https://jitpack.io' }
-	
-	flatDir {
-		dirs 'libs'
-	}
+    maven {
+        name = 'Ladysnake Mods'
+        url = 'https://maven.ladysnake.org/releases'
+        content {
+            includeGroup 'io.github.ladysnake'
+            includeGroup 'org.ladysnake'
+            includeGroupByRegex 'dev\\.onyxstudios.*'
+        }
+    }
+    maven {
+        url = 'https://maven.terraformersmc.com/releases'
+        content {
+            includeGroup 'com.terraformersmc'
+        }
+    }
+    maven { url = "https://api.modrinth.com/maven" }
+    maven { url = 'https://jitpack.io' }
+    mavenCentral()
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "io.github.ladysnake:satin:${satin_version}"
-	modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
-	modCompileOnly "com.terraformersmc:modmenu:11.0.3"
-}
-
-loom {
-
+    modImplementation "io.github.ladysnake:satin:${satin_version}"
+    modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
+    modCompileOnly "com.terraformersmc:modmenu:11.0.3"
 }
 
 processResources {
-	inputs.property "version", project.version
+    inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying clearly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	// If Javadoc is generated, this must be specified in that task too.
-	it.options.encoding = "UTF-8"
-
-	it.options.release = 21
+    it.options.encoding = "UTF-8"
+    it.options.release = 21
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
+    withSourcesJar()
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
 }
 
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
-
 String getVersion() {
-	String version = "${project.mod_version}+mc${project.minecraft_version}"
-
-	return version
+    String version = "${project.mod_version}+mc${project.minecraft_version}"
+    return version
 }
